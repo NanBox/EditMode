@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.southernbox.swipedeletelayout.widget.SwipeDeleteLayout
+        android:id="@+id/sdl"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+        <FrameLayout
+            android:id="@+id/fl_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="67dp"
+                android:layout_height="55dp"
+                android:background="@color/red"
+                android:gravity="center"
+                android:text="删除"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_vertical"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_predelete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="11dp"
+                android:background="@drawable/btn_red_circle"
+                android:gravity="center"
+                android:text="—"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </FrameLayout>
+
+    </com.southernbox.swipedeletelayout.widget.SwipeDeleteLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="#DDDDDD" />
+
+</LinearLayout>
