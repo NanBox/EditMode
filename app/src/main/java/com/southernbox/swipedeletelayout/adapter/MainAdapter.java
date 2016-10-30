@@ -63,6 +63,8 @@ public class MainAdapter extends RecyclerView.Adapter {
             }
         });
 
+        layout.setEdit(isEdit);
+
         viewHolder.vDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,8 +122,6 @@ public class MainAdapter extends RecyclerView.Adapter {
                 }
             }
         });
-
-        layout.setEdit(isEdit);
 
     }
 

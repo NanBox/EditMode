@@ -273,5 +273,6 @@ public class SwipeDeleteLayout extends FrameLayout {
 
     public void setEdit(boolean isEdit) {
         this.isEdit = isEdit;
+        mDragHelper.abort();
     }
 }
