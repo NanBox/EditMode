@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 
 /**
  * Created by SouthernBox on 2016/10/27 0027.
+ * 侧滑删除控件
  */
 
 public class SwipeDeleteLayout extends FrameLayout {
@@ -87,7 +88,7 @@ public class SwipeDeleteLayout extends FrameLayout {
         }
     };
 
-    public enum State {
+    private enum State {
         CLOSE, OPENLEFT, OPENRIGHT, DRAGGING
     }
 

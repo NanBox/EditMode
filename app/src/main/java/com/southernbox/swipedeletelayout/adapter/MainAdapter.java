@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.southernbox.swipedeletelayout.R;
-import com.southernbox.swipedeletelayout.entity.Entity;
 import com.southernbox.swipedeletelayout.widget.SwipeDeleteLayout;
 
 import java.util.ArrayList;
@@ -16,12 +15,13 @@ import java.util.List;
 
 /**
  * Created by SouthernBox on 2016/10/25 0025.
+ * 主页面适配器
  */
 
 public class MainAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
-    private List<Entity> mList;
+    private List<String> mList;
     private boolean isEdit;
 
     private ArrayList<SwipeDeleteLayout> allItems = new ArrayList<>();
@@ -31,7 +31,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     private static final long delayClickTime = 500;
     private long lastClickTime;
 
-    public MainAdapter(Context context, List<Entity> List) {
+    public MainAdapter(Context context, List<String> List) {
         this.mContext = context;
         this.mList = List;
     }
@@ -48,12 +48,12 @@ public class MainAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        ViewHolder viewHolder = (ViewHolder) holder;
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final ViewHolder viewHolder = (ViewHolder) holder;
 
         final SwipeDeleteLayout layout = viewHolder.swipeDeleteLayout;
 
-        viewHolder.tvName.setText(mList.get(position).getName());
+        viewHolder.tvName.setText(mList.get(position));
 
         viewHolder.vPreDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +72,7 @@ public class MainAdapter extends RecyclerView.Adapter {
                 if (currentTime - lastClickTime < delayClickTime) {
                     return;
                 }
+                int position = viewHolder.getAdapterPosition();
                 mList.remove(position);
                 notifyItemRemoved(position);
                 if (position != mList.size()) {
@@ -142,7 +143,7 @@ public class MainAdapter extends RecyclerView.Adapter {
      *
      * @param unCloseLayout 不关闭的layout
      */
-    public void closeRightOpenToLeftAll(SwipeDeleteLayout unCloseLayout) {
+    private void closeRightOpenToLeftAll(SwipeDeleteLayout unCloseLayout) {
         for (SwipeDeleteLayout layout : mRightOpenItems) {
             if (layout != unCloseLayout) {
                 layout.leftOpen(true);
@@ -166,7 +167,7 @@ public class MainAdapter extends RecyclerView.Adapter {
         View vPreDelete;
         View vDelete;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
         }
     }
