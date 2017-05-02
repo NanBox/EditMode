@@ -22,11 +22,10 @@ public class MainAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<String> mList;
-    private boolean isEdit;
+    public static boolean isEdit;
 
-    private ArrayList<SwipeDeleteLayout> allItems = new ArrayList<>();
-    private ArrayList<SwipeDeleteLayout> mLeftOpenItems = new ArrayList<>();
-    private ArrayList<SwipeDeleteLayout> mRightOpenItems = new ArrayList<>();
+    private static ArrayList<SwipeDeleteLayout> allItems = new ArrayList<>();
+    public static SwipeDeleteLayout mRightOpenItem;
 
     private static final long delayClickTime = 500;
     private long lastClickTime;
@@ -58,12 +57,13 @@ public class MainAdapter extends RecyclerView.Adapter {
         viewHolder.vPreDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                closeRightOpenToLeftAll(layout);
-                layout.rightOpen();
+                if (mRightOpenItem == null) {
+                    layout.rightOpen();
+                } else {
+                    openLeftAll();
+                }
             }
         });
-
-        layout.setEdit(isEdit);
 
         viewHolder.vDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +74,7 @@ public class MainAdapter extends RecyclerView.Adapter {
                 }
                 int position = viewHolder.getAdapterPosition();
                 mList.remove(position);
+                mRightOpenItem = null;
                 notifyItemRemoved(position);
                 if (position != mList.size()) {
                     notifyItemRangeChanged(position, mList.size() - position);
@@ -96,31 +97,22 @@ public class MainAdapter extends RecyclerView.Adapter {
 
             @Override
             public void onStartRightOpen(SwipeDeleteLayout layout) {
-                if (!mRightOpenItems.contains(layout)) {
-                    mRightOpenItems.add(layout);
-                }
+                mRightOpenItem = layout;
             }
 
             @Override
             public void onClose(SwipeDeleteLayout layout) {
-                if (mLeftOpenItems.contains(layout)) {
-                    mLeftOpenItems.remove(layout);
-                } else if (mRightOpenItems.contains(layout)) {
-                    mRightOpenItems.remove(layout);
-                }
+                mRightOpenItem = null;
             }
 
             @Override
             public void onLeftOpen(SwipeDeleteLayout layout) {
-                mLeftOpenItems.add(layout);
+                mRightOpenItem = null;
             }
 
             @Override
             public void onRightOpen(SwipeDeleteLayout layout) {
-                closeRightOpenToLeftAll(layout);
-                if (!mRightOpenItems.contains(layout)) {
-                    mRightOpenItems.add(layout);
-                }
+                mRightOpenItem = layout;
             }
         });
 
@@ -132,28 +124,14 @@ public class MainAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void openLeftAll() {
+    public static void openLeftAll() {
         for (SwipeDeleteLayout sl : allItems) {
             sl.leftOpen(true);
         }
     }
 
-    /**
-     * 将所有右侧打开的item变为左侧打开
-     *
-     * @param unCloseLayout 不关闭的layout
-     */
-    private void closeRightOpenToLeftAll(SwipeDeleteLayout unCloseLayout) {
-        for (SwipeDeleteLayout layout : mRightOpenItems) {
-            if (layout != unCloseLayout) {
-                layout.leftOpen(true);
-            }
-        }
-        mRightOpenItems.clear();
-    }
-
     public void setEdit(boolean isEdit) {
-        this.isEdit = isEdit;
+        MainAdapter.isEdit = isEdit;
     }
 
     @Override

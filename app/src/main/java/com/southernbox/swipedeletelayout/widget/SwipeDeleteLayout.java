@@ -5,8 +5,11 @@ import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.southernbox.swipedeletelayout.adapter.MainAdapter;
 
 /**
  * Created by SouthernBox on 2016/10/27 0027.
@@ -234,7 +237,7 @@ public class SwipeDeleteLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         //判断是否为编辑模式
-        if (isEdit) {
+        if (MainAdapter.isEdit) {
             mFrontView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
             mBackView.layout(mWidth + mLeftWidth, 0, mBackWidth + mWidth + mLeftWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);
@@ -270,10 +273,15 @@ public class SwipeDeleteLayout extends FrameLayout {
         }
     }
 
-    private boolean isEdit;
-
-    public void setEdit(boolean isEdit) {
-        this.isEdit = isEdit;
-        mDragHelper.abort();
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (MainAdapter.isEdit && MainAdapter.mRightOpenItem != null && mState == State.OPENLEFT) {
+                    MainAdapter.openLeftAll();
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 }

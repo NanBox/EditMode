@@ -41,13 +41,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isEdit) {
                     tvEdit.setText("编辑");
-                    isEdit = false;
                     mAdapter.closeAll();
                 } else {
                     tvEdit.setText("完成");
-                    isEdit = true;
                     mAdapter.openLeftAll();
                 }
+                isEdit = !isEdit;
                 mAdapter.setEdit(isEdit);
             }
         });
