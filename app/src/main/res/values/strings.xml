@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SwipeDeleteLayout</string>
+    <string name="app_name">EditDeleteLayout</string>
     <string name="delete">删除</string>
     <string name="line">—</string>
     <string name="edit">编辑</string>

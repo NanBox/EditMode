@@ -1,4 +1,4 @@
-package com.southernbox.swipedeletelayout.widget;
+package com.southernbox.editdeletelayout.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.southernbox.swipedeletelayout.adapter.MainAdapter;
+import com.southernbox.editdeletelayout.adapter.MainAdapter;
 
 /**
  * Created by SouthernBox on 2017/5/2 0002.

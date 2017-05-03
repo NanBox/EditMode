@@ -1,4 +1,4 @@
-package com.southernbox.swipedeletelayout;
+package com.southernbox.editdeletelayout;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.southernbox.swipedeletelayout.widget;
+package com.southernbox.editdeletelayout.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -8,14 +8,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.southernbox.swipedeletelayout.adapter.MainAdapter;
+import com.southernbox.editdeletelayout.adapter.MainAdapter;
 
 /**
  * Created by SouthernBox on 2016/10/27 0027.
  * 侧滑删除控件
  */
 
-public class SwipeDeleteLayout extends FrameLayout {
+public class EditDeleteLayout extends FrameLayout {
 
     public final static int STATE_CLOSE = 1;      //关闭状态
     public final static int STATE_OPEN_LEFT = 2;  //左边打开
@@ -30,15 +30,15 @@ public class SwipeDeleteLayout extends FrameLayout {
     private int mLeftWidth;
     private int mRightWidth;
 
-    public SwipeDeleteLayout(Context context) {
+    public EditDeleteLayout(Context context) {
         this(context, null);
     }
 
-    public SwipeDeleteLayout(Context context, AttributeSet attrs) {
+    public EditDeleteLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SwipeDeleteLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public EditDeleteLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -91,13 +91,13 @@ public class SwipeDeleteLayout extends FrameLayout {
 
     public interface OnStateChangeListener {
 
-        void onPreExecuted(SwipeDeleteLayout layout);
+        void onPreExecuted(EditDeleteLayout layout);
 
-        void onLeftOpen(SwipeDeleteLayout layout);
+        void onLeftOpen(EditDeleteLayout layout);
 
-        void onRightOpen(SwipeDeleteLayout layout);
+        void onRightOpen(EditDeleteLayout layout);
 
-        void onClose(SwipeDeleteLayout layout);
+        void onClose(EditDeleteLayout layout);
 
     }
 

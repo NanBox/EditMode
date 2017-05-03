@@ -1,4 +1,4 @@
-package com.southernbox.swipedeletelayout.activity;
+package com.southernbox.editdeletelayout.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.southernbox.swipedeletelayout.R;
-import com.southernbox.swipedeletelayout.adapter.MainAdapter;
+import com.southernbox.editdeletelayout.R;
+import com.southernbox.editdeletelayout.adapter.MainAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;

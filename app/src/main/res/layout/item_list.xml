@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.southernbox.swipedeletelayout.widget.SwipeDeleteLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipe_delete_layout"
+<com.southernbox.editdeletelayout.widget.EditDeleteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_delete_layout"
     android:layout_width="match_parent"
     android:layout_height="55dp">
 
@@ -50,4 +50,4 @@
 
     </FrameLayout>
 
-</com.southernbox.swipedeletelayout.widget.SwipeDeleteLayout>
+</com.southernbox.editdeletelayout.widget.EditDeleteLayout>

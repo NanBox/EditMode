@@ -1,4 +1,4 @@
-package com.southernbox.swipedeletelayout.adapter;
+package com.southernbox.editdeletelayout.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.southernbox.swipedeletelayout.R;
-import com.southernbox.swipedeletelayout.widget.SwipeDeleteLayout;
+import com.southernbox.editdeletelayout.R;
+import com.southernbox.editdeletelayout.widget.EditDeleteLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class MainAdapter extends RecyclerView.Adapter {
     private List<String> mList;
     public static boolean isEdit;
 
-    private static ArrayList<SwipeDeleteLayout> allItems = new ArrayList<>();
-    public static SwipeDeleteLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
+    private static ArrayList<EditDeleteLayout> allItems = new ArrayList<>();
+    public static EditDeleteLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
 
     public MainAdapter(Context context, List<String> List) {
         this.mContext = context;
@@ -34,14 +34,14 @@ public class MainAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_swipe, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_list, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
-        final SwipeDeleteLayout layout = viewHolder.swipeDeleteLayout;
+        final EditDeleteLayout layout = viewHolder.editDeleteLayout;
 
         viewHolder.tvName.setText(mList.get(position));
 
@@ -69,31 +69,31 @@ public class MainAdapter extends RecyclerView.Adapter {
             }
         });
 
-        layout.setOnDragStateChangeListener(new SwipeDeleteLayout.OnStateChangeListener() {
+        layout.setOnDragStateChangeListener(new EditDeleteLayout.OnStateChangeListener() {
 
             @Override
-            public void onPreExecuted(SwipeDeleteLayout layout) {
+            public void onPreExecuted(EditDeleteLayout layout) {
                 if (!allItems.contains(layout)) {
                     allItems.add(layout);
                 }
             }
 
             @Override
-            public void onClose(SwipeDeleteLayout layout) {
+            public void onClose(EditDeleteLayout layout) {
                 if (mRightOpenItem == layout) {
                     mRightOpenItem = null;
                 }
             }
 
             @Override
-            public void onLeftOpen(SwipeDeleteLayout layout) {
+            public void onLeftOpen(EditDeleteLayout layout) {
                 if (mRightOpenItem == layout) {
                     mRightOpenItem = null;
                 }
             }
 
             @Override
-            public void onRightOpen(SwipeDeleteLayout layout) {
+            public void onRightOpen(EditDeleteLayout layout) {
                 if (mRightOpenItem != layout) {
                     mRightOpenItem = layout;
                 }
@@ -115,7 +115,7 @@ public class MainAdapter extends RecyclerView.Adapter {
      * 关闭所有 item
      */
     public void closeAll() {
-        for (SwipeDeleteLayout layout : allItems) {
+        for (EditDeleteLayout layout : allItems) {
             layout.close();
         }
     }
@@ -124,7 +124,7 @@ public class MainAdapter extends RecyclerView.Adapter {
      * 将所有 item 向左展开
      */
     public void openLeftAll() {
-        for (SwipeDeleteLayout layout : allItems) {
+        for (EditDeleteLayout layout : allItems) {
             layout.openLeft();
         }
     }
@@ -135,14 +135,14 @@ public class MainAdapter extends RecyclerView.Adapter {
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
-        SwipeDeleteLayout swipeDeleteLayout;
+        EditDeleteLayout editDeleteLayout;
         TextView tvName;
         View vPreDelete;
         View vDelete;
 
         ViewHolder(View itemView) {
             super(itemView);
-            swipeDeleteLayout = (SwipeDeleteLayout) itemView.findViewById(R.id.swipe_delete_layout);
+            editDeleteLayout = (EditDeleteLayout) itemView.findViewById(R.id.edit_delete_layout);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             vPreDelete = itemView.findViewById(R.id.fl_pre_delete);
             vDelete = itemView.findViewById(R.id.fl_delete);
