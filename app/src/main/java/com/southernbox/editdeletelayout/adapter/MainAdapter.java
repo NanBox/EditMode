@@ -25,7 +25,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     public static boolean isEdit;
 
     private static ArrayList<EditDeleteLayout> allItems = new ArrayList<>();
-    public static EditDeleteLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
+    private EditDeleteLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
 
     public MainAdapter(Context context, List<String> List) {
         this.mContext = context;
@@ -102,6 +102,11 @@ public class MainAdapter extends RecyclerView.Adapter {
 
     }
 
+    @Override
+    public int getItemCount() {
+        return mList.size();
+    }
+
     /**
      * 设置编辑状态
      *
@@ -129,9 +134,13 @@ public class MainAdapter extends RecyclerView.Adapter {
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mList.size();
+    /**
+     * 获取向右展开的 item
+     *
+     * @return 向右展开的 item
+     */
+    public EditDeleteLayout getRightOpenItem() {
+        return mRightOpenItem;
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {

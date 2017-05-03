@@ -14,6 +14,7 @@ import com.southernbox.editdeletelayout.adapter.MainAdapter;
  */
 
 public class MyRecyclerView extends RecyclerView {
+
     public MyRecyclerView(Context context) {
         super(context);
     }
@@ -28,9 +29,9 @@ public class MyRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        if (MainAdapter.isEdit && MainAdapter.mRightOpenItem != null) {
-            MainAdapter.mRightOpenItem.openLeft();
-            MainAdapter.mRightOpenItem = null;
+        EditDeleteLayout rightOpenItem = ((MainAdapter) getAdapter()).getRightOpenItem();
+        if (MainAdapter.isEdit && rightOpenItem != null) {
+            rightOpenItem.openLeft();
             return false;
         }
         return super.onTouchEvent(e);
