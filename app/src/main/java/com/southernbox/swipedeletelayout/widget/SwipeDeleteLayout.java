@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -18,18 +17,18 @@ import com.southernbox.swipedeletelayout.adapter.MainAdapter;
 
 public class SwipeDeleteLayout extends FrameLayout {
 
-    private ViewDragHelper mDragHelper;
-    private View mBackView;
-    private View mFrontView;
-    private View mLeftView;
-    private int mWidth;
-    private int mHeight;
-    private int mBackWidth;
-    private int mLeftWidth;
-
     public final static int STATE_CLOSE = 1;      //关闭状态
     public final static int STATE_OPEN_LEFT = 2;  //左边打开
     public final static int STATE_OPEN_RIGHT = 3; //右边打开
+
+    private ViewDragHelper mDragHelper;
+    private View mContentView;
+    private View mLeftView;
+    private View mRightView;
+    private int mWidth;
+    private int mHeight;
+    private int mLeftWidth;
+    private int mRightWidth;
 
     public SwipeDeleteLayout(Context context) {
         this(context, null);
@@ -53,21 +52,21 @@ public class SwipeDeleteLayout extends FrameLayout {
 
         //限定移动范围
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-            if (child == mFrontView) {
-                if (left < -mBackWidth) {
-                    left = -mBackWidth;
+            if (child == mContentView) {
+                if (left < -mRightWidth) {
+                    left = -mRightWidth;
                 } else if (left > mLeftWidth) {
                     left = mLeftWidth;
                 }
-            } else if (child == mBackView) {
-                if (left < mWidth - mBackWidth) {
-                    left = mWidth - mBackWidth;
+            } else if (child == mRightView) {
+                if (left < mWidth - mRightWidth) {
+                    left = mWidth - mRightWidth;
                 } else if (left > mWidth) {
                     left = mWidth;
                 }
             } else if (child == mLeftView) {
-                if (left < mWidth - mBackWidth) {
-                    left = mWidth - mBackWidth;
+                if (left < mWidth - mRightWidth) {
+                    left = mWidth - mRightWidth;
                 } else if (left > -mLeftWidth) {
                     left = 0 - mLeftWidth;
                 }
@@ -76,105 +75,68 @@ public class SwipeDeleteLayout extends FrameLayout {
         }
 
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-            if (changedView == mFrontView) {
-                mBackView.offsetLeftAndRight(dx);
+            if (changedView == mContentView) {
+                mRightView.offsetLeftAndRight(dx);
                 mLeftView.offsetLeftAndRight(dx);
-            } else if (changedView == mBackView) {
-                mFrontView.offsetLeftAndRight(dx);
+            } else if (changedView == mRightView) {
+                mContentView.offsetLeftAndRight(dx);
                 mLeftView.offsetLeftAndRight(dx);
             } else if (changedView == mLeftView) {
-                mFrontView.offsetLeftAndRight(dx);
-                mBackView.offsetLeftAndRight(dx);
+                mContentView.offsetLeftAndRight(dx);
+                mRightView.offsetLeftAndRight(dx);
             }
-            dispatchDragState(mFrontView.getLeft());
             invalidate();
         }
     };
 
-    private enum State {
-        CLOSE, OPENLEFT, OPENRIGHT, DRAGGING
-    }
-
-    private State mState = State.CLOSE;
-
-    public interface OnDragStateChangeListener {
+    public interface OnStateChangeListener {
 
         void onPreExecuted(SwipeDeleteLayout layout);
-
-        void onClose(SwipeDeleteLayout layout);
 
         void onLeftOpen(SwipeDeleteLayout layout);
 
         void onRightOpen(SwipeDeleteLayout layout);
 
-        void onDragging();
+        void onClose(SwipeDeleteLayout layout);
 
-        void onStartRightOpen(SwipeDeleteLayout layout);
     }
 
-    private OnDragStateChangeListener mOnDragStateChangeListener;
+    private OnStateChangeListener mOnStateChangeListener;
 
-    public State getState() {
-        return mState;
+    public void setOnDragStateChangeListener(OnStateChangeListener onStateChangeListener) {
+        mOnStateChangeListener = onStateChangeListener;
+        mOnStateChangeListener.onPreExecuted(this);
     }
 
-    protected void dispatchDragState(int left) {
-        State preState = mState;
-        mState = updateState(left);
-        if (mOnDragStateChangeListener != null) {
-            if (mState != preState) {
-                if (mState == State.OPENLEFT) {
-                    mOnDragStateChangeListener.onLeftOpen(this);
-                } else if (mState == State.OPENRIGHT) {
-                    mOnDragStateChangeListener.onRightOpen(this);
-                } else if (mState == State.CLOSE) {
-                    mOnDragStateChangeListener.onClose(this);
-                } else if (mState == State.DRAGGING) {
-                    if (preState == State.OPENLEFT) {
-                        mOnDragStateChangeListener.onStartRightOpen(this);
-                    }
-                }
-            } else {
-                mOnDragStateChangeListener.onDragging();
-            }
+    public void openRight() {
+        openRight(true);
+    }
+
+    public void openRight(boolean isSmooth) {
+        if (mOnStateChangeListener != null) {
+            mOnStateChangeListener.onRightOpen(this);
         }
-    }
-
-    private State updateState(int left) {
-        if (left == mLeftWidth) {
-            return State.OPENLEFT;
-        } else if (left == -mBackWidth) {
-            return State.OPENRIGHT;
-        } else if (left == 0) {
-            return State.CLOSE;
-        } else {
-            return State.DRAGGING;
-        }
-    }
-
-    public void setState(State state) {
-        mState = state;
-    }
-
-    public OnDragStateChangeListener getOnDragStateChangeListener() {
-        return mOnDragStateChangeListener;
-    }
-
-    public void setOnDragStateChangeListener(OnDragStateChangeListener onDragStateChangeListener) {
-        mOnDragStateChangeListener = onDragStateChangeListener;
-        mOnDragStateChangeListener.onPreExecuted(this);
-    }
-
-    public void rightOpen() {
-        rightOpen(true);
-    }
-
-    public void rightOpen(boolean isSmooth) {
         if (isSmooth) {
-            mDragHelper.smoothSlideViewTo(mFrontView, -mBackWidth, 0);
+            mDragHelper.smoothSlideViewTo(mContentView, -mRightWidth, 0);
             invalidate();
         } else {
             layoutContent(STATE_OPEN_RIGHT);
+        }
+    }
+
+    public void openLeft() {
+        openLeft(true);
+    }
+
+    public void openLeft(boolean isSmooth) {
+        if (mOnStateChangeListener != null) {
+            mOnStateChangeListener.onLeftOpen(this);
+        }
+        if (isSmooth) {
+            mDragHelper.smoothSlideViewTo(mContentView, mLeftWidth, 0);
+            invalidate();
+        } else {
+            layoutContent(STATE_OPEN_LEFT);
         }
     }
 
@@ -182,18 +144,12 @@ public class SwipeDeleteLayout extends FrameLayout {
         close(true);
     }
 
-    public void leftOpen(boolean isSmooth) {
-        if (isSmooth) {
-            mDragHelper.smoothSlideViewTo(mFrontView, mLeftWidth, 0);
-            invalidate();
-        } else {
-            layoutContent(STATE_OPEN_LEFT);
-        }
-    }
-
     public void close(boolean isSmooth) {
+        if (mOnStateChangeListener != null) {
+            mOnStateChangeListener.onClose(this);
+        }
         if (isSmooth) {
-            mDragHelper.smoothSlideViewTo(mFrontView, 0, 0);
+            mDragHelper.smoothSlideViewTo(mContentView, 0, 0);
             invalidate();
         } else {
             layoutContent(STATE_CLOSE);
@@ -204,13 +160,13 @@ public class SwipeDeleteLayout extends FrameLayout {
         Rect frontRect = computeFrontRect(state);
         Rect backRect = computeBackRectFromFront(frontRect);
         Rect leftRect = computeLeftRectFromFront(frontRect);
-        mFrontView.layout(frontRect.left, frontRect.top, frontRect.right, frontRect.bottom);
-        mBackView.layout(backRect.left, backRect.top, backRect.right, backRect.bottom);
+        mContentView.layout(frontRect.left, frontRect.top, frontRect.right, frontRect.bottom);
+        mRightView.layout(backRect.left, backRect.top, backRect.right, backRect.bottom);
         mLeftView.layout(leftRect.left, leftRect.top, leftRect.right, leftRect.bottom);
     }
 
     private Rect computeBackRectFromFront(Rect frontRect) {
-        return new Rect(frontRect.right, frontRect.top, frontRect.right + mBackWidth,
+        return new Rect(frontRect.right, frontRect.top, frontRect.right + mRightWidth,
                 frontRect.bottom);
     }
 
@@ -223,7 +179,7 @@ public class SwipeDeleteLayout extends FrameLayout {
         if (state == STATE_OPEN_LEFT) {
             left = mLeftWidth;
         } else if (state == STATE_OPEN_RIGHT) {
-            left = -mBackWidth;
+            left = -mRightWidth;
         }
         return new Rect(left, 0, left + mWidth, mHeight);
     }
@@ -232,18 +188,17 @@ public class SwipeDeleteLayout extends FrameLayout {
         mDragHelper = ViewDragHelper.create(this, mCallback);
     }
 
-    //在onLayout中"摆放"每个子View的位置
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        //判断是否为编辑模式
+        //判断是否为编辑模式,摆放每个子View的位置
         if (MainAdapter.isEdit) {
-            mFrontView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
-            mBackView.layout(mWidth + mLeftWidth, 0, mBackWidth + mWidth + mLeftWidth, mHeight);
+            mContentView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
+            mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);
         } else {
-            mFrontView.layout(0, 0, mWidth, mHeight);
-            mBackView.layout(mWidth, 0, mBackWidth + mWidth, mHeight);
+            mContentView.layout(0, 0, mWidth, mHeight);
+            mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
             mLeftView.layout(-mLeftWidth, 0, 0, mHeight);
         }
     }
@@ -251,17 +206,17 @@ public class SwipeDeleteLayout extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mBackView = getChildAt(0);
-        mFrontView = getChildAt(1);
-        mLeftView = getChildAt(2);
+        mLeftView = getChildAt(0);
+        mContentView = getChildAt(1);
+        mRightView = getChildAt(2);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = getMeasuredWidth();
-        mHeight = getMeasuredHeight();
-        mBackWidth = mBackView.getMeasuredWidth();
+        mWidth = w;
+        mHeight = h;
+        mRightWidth = mRightView.getMeasuredWidth();
         mLeftWidth = mLeftView.getMeasuredWidth();
     }
 
@@ -273,15 +228,4 @@ public class SwipeDeleteLayout extends FrameLayout {
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (MainAdapter.isEdit && MainAdapter.mRightOpenItem != null && mState == State.OPENLEFT) {
-                    MainAdapter.openLeftAll();
-                }
-                break;
-        }
-        return super.onTouchEvent(event);
-    }
 }

@@ -14,23 +14,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="SwipeDeleteLayout"
+                android:text="@string/app_name"
                 android:textColor="@color/white"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_edit"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:background="?android:attr/selectableItemBackground"
                 android:gravity="center"
-                android:text="编辑"
+                android:text="@string/edit"
                 android:textColor="@color/white"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
 
         </RelativeLayout>
 

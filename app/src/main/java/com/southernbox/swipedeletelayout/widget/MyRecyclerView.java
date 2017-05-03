@@ -28,12 +28,10 @@ public class MyRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (MainAdapter.isEdit && MainAdapter.mRightOpenItem != null) {
-                    return false;
-                }
-                break;
+        if (MainAdapter.isEdit && MainAdapter.mRightOpenItem != null) {
+            MainAdapter.mRightOpenItem.openLeft();
+            MainAdapter.mRightOpenItem = null;
+            return false;
         }
         return super.onTouchEvent(e);
     }

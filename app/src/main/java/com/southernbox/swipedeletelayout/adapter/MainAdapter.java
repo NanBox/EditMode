@@ -25,10 +25,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     public static boolean isEdit;
 
     private static ArrayList<SwipeDeleteLayout> allItems = new ArrayList<>();
-    public static SwipeDeleteLayout mRightOpenItem;
-
-    private static final long delayClickTime = 500;
-    private long lastClickTime;
+    public static SwipeDeleteLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
 
     public MainAdapter(Context context, List<String> List) {
         this.mContext = context;
@@ -38,18 +35,12 @@ public class MainAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_swipe, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        holder.swipeDeleteLayout = (SwipeDeleteLayout) view.findViewById(R.id.sdl);
-        holder.tvName = (TextView) view.findViewById(R.id.tv_name);
-        holder.vPreDelete = view.findViewById(R.id.fl_predelete);
-        holder.vDelete = view.findViewById(R.id.fl_delete);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
-
         final SwipeDeleteLayout layout = viewHolder.swipeDeleteLayout;
 
         viewHolder.tvName.setText(mList.get(position));
@@ -57,10 +48,10 @@ public class MainAdapter extends RecyclerView.Adapter {
         viewHolder.vPreDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRightOpenItem == null) {
-                    layout.rightOpen();
+                if (mRightOpenItem != null) {
+                    mRightOpenItem.openLeft();
                 } else {
-                    openLeftAll();
+                    layout.openRight();
                 }
             }
         });
@@ -68,10 +59,6 @@ public class MainAdapter extends RecyclerView.Adapter {
         viewHolder.vDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - lastClickTime < delayClickTime) {
-                    return;
-                }
                 int position = viewHolder.getAdapterPosition();
                 mList.remove(position);
                 mRightOpenItem = null;
@@ -79,59 +66,67 @@ public class MainAdapter extends RecyclerView.Adapter {
                 if (position != mList.size()) {
                     notifyItemRangeChanged(position, mList.size() - position);
                 }
-                lastClickTime = currentTime;
             }
         });
 
-        layout.setOnDragStateChangeListener(new SwipeDeleteLayout.OnDragStateChangeListener() {
+        layout.setOnDragStateChangeListener(new SwipeDeleteLayout.OnStateChangeListener() {
 
             @Override
             public void onPreExecuted(SwipeDeleteLayout layout) {
-                allItems.add(layout);
-            }
-
-            @Override
-            public void onDragging() {
-
-            }
-
-            @Override
-            public void onStartRightOpen(SwipeDeleteLayout layout) {
-                mRightOpenItem = layout;
+                if (!allItems.contains(layout)) {
+                    allItems.add(layout);
+                }
             }
 
             @Override
             public void onClose(SwipeDeleteLayout layout) {
-                mRightOpenItem = null;
+                if (mRightOpenItem == layout) {
+                    mRightOpenItem = null;
+                }
             }
 
             @Override
             public void onLeftOpen(SwipeDeleteLayout layout) {
-                mRightOpenItem = null;
+                if (mRightOpenItem == layout) {
+                    mRightOpenItem = null;
+                }
             }
 
             @Override
             public void onRightOpen(SwipeDeleteLayout layout) {
-                mRightOpenItem = layout;
+                if (mRightOpenItem != layout) {
+                    mRightOpenItem = layout;
+                }
             }
         });
 
     }
 
-    public void closeAll() {
-        for (SwipeDeleteLayout layout : allItems) {
-            layout.close(true);
-        }
-    }
-
-    public static void openLeftAll() {
-        for (SwipeDeleteLayout sl : allItems) {
-            sl.leftOpen(true);
-        }
-    }
-
+    /**
+     * 设置编辑状态
+     *
+     * @param isEdit 是否为编辑状态
+     */
     public void setEdit(boolean isEdit) {
         MainAdapter.isEdit = isEdit;
+    }
+
+    /**
+     * 关闭所有 item
+     */
+    public void closeAll() {
+        for (SwipeDeleteLayout layout : allItems) {
+            layout.close();
+        }
+    }
+
+    /**
+     * 将所有 item 向左展开
+     */
+    public void openLeftAll() {
+        for (SwipeDeleteLayout layout : allItems) {
+            layout.openLeft();
+        }
     }
 
     @Override
@@ -147,6 +142,10 @@ public class MainAdapter extends RecyclerView.Adapter {
 
         ViewHolder(View itemView) {
             super(itemView);
+            swipeDeleteLayout = (SwipeDeleteLayout) itemView.findViewById(R.id.swipe_delete_layout);
+            tvName = (TextView) itemView.findViewById(R.id.tv_name);
+            vPreDelete = itemView.findViewById(R.id.fl_pre_delete);
+            vDelete = itemView.findViewById(R.id.fl_delete);
         }
     }
 }
