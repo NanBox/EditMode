@@ -35,54 +35,55 @@ public class EditLayout extends FrameLayout {
 
     public EditLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+
+        ViewDragHelper.Callback mCallback = new ViewDragHelper.Callback() {
+
+            @Override
+            public boolean tryCaptureView(View child, int pointerId) {
+                return true;
+            }
+
+            //限定移动范围
+            public int clampViewPositionHorizontal(View child, int left, int dx) {
+                if (child == mContentView) {
+                    if (left < -mRightWidth) {
+                        left = -mRightWidth;
+                    } else if (left > mLeftWidth) {
+                        left = mLeftWidth;
+                    }
+                } else if (child == mRightView) {
+                    if (left < mWidth - mRightWidth) {
+                        left = mWidth - mRightWidth;
+                    } else if (left > mWidth) {
+                        left = mWidth;
+                    }
+                } else if (child == mLeftView) {
+                    if (left < mWidth - mRightWidth) {
+                        left = mWidth - mRightWidth;
+                    } else if (left > -mLeftWidth) {
+                        left = 0 - mLeftWidth;
+                    }
+                }
+                return left;
+            }
+
+            public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+                if (changedView == mContentView) {
+                    mRightView.offsetLeftAndRight(dx);
+                    mLeftView.offsetLeftAndRight(dx);
+                } else if (changedView == mRightView) {
+                    mContentView.offsetLeftAndRight(dx);
+                    mLeftView.offsetLeftAndRight(dx);
+                } else if (changedView == mLeftView) {
+                    mContentView.offsetLeftAndRight(dx);
+                    mRightView.offsetLeftAndRight(dx);
+                }
+                invalidate();
+            }
+        };
+
+        mDragHelper = ViewDragHelper.create(this, mCallback);
     }
-
-    private ViewDragHelper.Callback mCallback = new ViewDragHelper.Callback() {
-
-        @Override
-        public boolean tryCaptureView(View child, int pointerId) {
-            return true;
-        }
-
-        //限定移动范围
-        public int clampViewPositionHorizontal(View child, int left, int dx) {
-            if (child == mContentView) {
-                if (left < -mRightWidth) {
-                    left = -mRightWidth;
-                } else if (left > mLeftWidth) {
-                    left = mLeftWidth;
-                }
-            } else if (child == mRightView) {
-                if (left < mWidth - mRightWidth) {
-                    left = mWidth - mRightWidth;
-                } else if (left > mWidth) {
-                    left = mWidth;
-                }
-            } else if (child == mLeftView) {
-                if (left < mWidth - mRightWidth) {
-                    left = mWidth - mRightWidth;
-                } else if (left > -mLeftWidth) {
-                    left = 0 - mLeftWidth;
-                }
-            }
-            return left;
-        }
-
-        public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-            if (changedView == mContentView) {
-                mRightView.offsetLeftAndRight(dx);
-                mLeftView.offsetLeftAndRight(dx);
-            } else if (changedView == mRightView) {
-                mContentView.offsetLeftAndRight(dx);
-                mLeftView.offsetLeftAndRight(dx);
-            } else if (changedView == mLeftView) {
-                mContentView.offsetLeftAndRight(dx);
-                mRightView.offsetLeftAndRight(dx);
-            }
-            invalidate();
-        }
-    };
 
     public interface OnStateChangeListener {
 
@@ -103,49 +104,6 @@ public class EditLayout extends FrameLayout {
         mOnStateChangeListener.onPreExecuted(this);
     }
 
-    public void openRight() {
-        if (mOnStateChangeListener != null) {
-            mOnStateChangeListener.onRightOpen(this);
-        }
-        mDragHelper.smoothSlideViewTo(mContentView, -mRightWidth, 0);
-        invalidate();
-    }
-
-    public void openLeft() {
-        if (mOnStateChangeListener != null) {
-            mOnStateChangeListener.onLeftOpen(this);
-        }
-        mDragHelper.smoothSlideViewTo(mContentView, mLeftWidth, 0);
-        invalidate();
-    }
-
-    public void close() {
-        if (mOnStateChangeListener != null) {
-            mOnStateChangeListener.onClose(this);
-        }
-        mDragHelper.smoothSlideViewTo(mContentView, 0, 0);
-        invalidate();
-    }
-
-    private void init() {
-        mDragHelper = ViewDragHelper.create(this, mCallback);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        //判断是否为编辑模式,摆放每个子View的位置
-        if (EditAdapter.isEdit) {
-            mContentView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
-            mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
-            mLeftView.layout(0, 0, mLeftWidth, mHeight);
-        } else {
-            mContentView.layout(0, 0, mWidth, mHeight);
-            mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
-            mLeftView.layout(-mLeftWidth, 0, 0, mHeight);
-        }
-    }
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -164,11 +122,59 @@ public class EditLayout extends FrameLayout {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        //判断是否为编辑模式,摆放每个子View的位置
+        if (EditAdapter.isEdit) {
+            mContentView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
+            mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
+            mLeftView.layout(0, 0, mLeftWidth, mHeight);
+        } else {
+            mContentView.layout(0, 0, mWidth, mHeight);
+            mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
+            mLeftView.layout(-mLeftWidth, 0, 0, mHeight);
+        }
+    }
+
+    @Override
     public void computeScroll() {
         super.computeScroll();
         if (mDragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
+    }
+
+    /**
+     * 打开左侧
+     */
+    public void openLeft() {
+        if (mOnStateChangeListener != null) {
+            mOnStateChangeListener.onLeftOpen(this);
+        }
+        mDragHelper.smoothSlideViewTo(mContentView, mLeftWidth, 0);
+        invalidate();
+    }
+
+    /**
+     * 打开右侧
+     */
+    public void openRight() {
+        if (mOnStateChangeListener != null) {
+            mOnStateChangeListener.onRightOpen(this);
+        }
+        mDragHelper.smoothSlideViewTo(mContentView, -mRightWidth, 0);
+        invalidate();
+    }
+
+    /**
+     * 关闭
+     */
+    public void close() {
+        if (mOnStateChangeListener != null) {
+            mOnStateChangeListener.onClose(this);
+        }
+        mDragHelper.smoothSlideViewTo(mContentView, 0, 0);
+        invalidate();
     }
 
 }
