@@ -17,13 +17,13 @@ import com.southernbox.editlayout.adapter.EditAdapter;
 public class EditLayout extends FrameLayout {
 
     private ViewDragHelper mDragHelper;
-    private View mContentView;
-    private View mLeftView;
-    private View mRightView;
-    private int mWidth;
-    private int mHeight;
-    private int mLeftWidth;
-    private int mRightWidth;
+    private View mContentView;  //内容部分
+    private View mLeftView;     //左边圆形删除按键
+    private View mRightView;    //右边删除按键
+    private int mWidth;         //内容部分宽度
+    private int mHeight;        //内容部分高度
+    private int mLeftWidth;     //左边部分宽度
+    private int mRightWidth;    //右边部分宽度
 
     public EditLayout(Context context) {
         this(context, null);
@@ -40,10 +40,10 @@ public class EditLayout extends FrameLayout {
 
             @Override
             public boolean tryCaptureView(View child, int pointerId) {
-                return true;
+                return false;
             }
 
-            //限定移动范围
+            @Override
             public int clampViewPositionHorizontal(View child, int left, int dx) {
                 if (child == mContentView) {
                     if (left < -mRightWidth) {
@@ -67,6 +67,7 @@ public class EditLayout extends FrameLayout {
                 return left;
             }
 
+            @Override
             public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
                 if (changedView == mContentView) {
                     mRightView.offsetLeftAndRight(dx);
@@ -87,8 +88,6 @@ public class EditLayout extends FrameLayout {
 
     public interface OnStateChangeListener {
 
-        void onPreExecuted(EditLayout layout);
-
         void onLeftOpen(EditLayout layout);
 
         void onRightOpen(EditLayout layout);
@@ -101,7 +100,6 @@ public class EditLayout extends FrameLayout {
 
     public void setOnDragStateChangeListener(OnStateChangeListener onStateChangeListener) {
         mOnStateChangeListener = onStateChangeListener;
-        mOnStateChangeListener.onPreExecuted(this);
     }
 
     @Override
@@ -145,7 +143,7 @@ public class EditLayout extends FrameLayout {
     }
 
     /**
-     * 打开左侧
+     * 展开左侧
      */
     public void openLeft() {
         if (mOnStateChangeListener != null) {
@@ -156,7 +154,7 @@ public class EditLayout extends FrameLayout {
     }
 
     /**
-     * 打开右侧
+     * 展开右侧
      */
     public void openRight() {
         if (mOnStateChangeListener != null) {

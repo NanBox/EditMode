@@ -44,6 +44,10 @@ public class EditAdapter extends RecyclerView.Adapter {
         final ViewHolder viewHolder = (ViewHolder) holder;
         final EditLayout layout = viewHolder.editLayout;
 
+        if (!allItems.contains(layout)) {
+            allItems.add(layout);
+        }
+
         viewHolder.tvName.setText(mList.get(position));
 
         viewHolder.vPreDelete.setOnTouchListener(new View.OnTouchListener() {
@@ -82,20 +86,6 @@ public class EditAdapter extends RecyclerView.Adapter {
         layout.setOnDragStateChangeListener(new EditLayout.OnStateChangeListener() {
 
             @Override
-            public void onPreExecuted(EditLayout layout) {
-                if (!allItems.contains(layout)) {
-                    allItems.add(layout);
-                }
-            }
-
-            @Override
-            public void onClose(EditLayout layout) {
-                if (mRightOpenItem == layout) {
-                    mRightOpenItem = null;
-                }
-            }
-
-            @Override
             public void onLeftOpen(EditLayout layout) {
                 if (mRightOpenItem == layout) {
                     mRightOpenItem = null;
@@ -106,6 +96,13 @@ public class EditAdapter extends RecyclerView.Adapter {
             public void onRightOpen(EditLayout layout) {
                 if (mRightOpenItem != layout) {
                     mRightOpenItem = layout;
+                }
+            }
+
+            @Override
+            public void onClose(EditLayout layout) {
+                if (mRightOpenItem == layout) {
+                    mRightOpenItem = null;
                 }
             }
         });
