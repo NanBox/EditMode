@@ -31,12 +31,14 @@ public class EditDeleteRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        if (getAdapter() instanceof EditDeleteAdapter) {
-            rightOpenItem = ((EditDeleteAdapter) getAdapter()).getRightOpenItem();
-        }
-        if (EditDeleteAdapter.isEdit && rightOpenItem != null) {
-            rightOpenItem.openLeft();
-            return false;
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (getAdapter() instanceof EditDeleteAdapter) {
+                    rightOpenItem = ((EditDeleteAdapter) getAdapter()).getRightOpenItem();
+                }
+                if (EditDeleteAdapter.isEdit && rightOpenItem != null) {
+                    rightOpenItem.openLeft();
+                }
         }
         return super.onTouchEvent(e);
     }
