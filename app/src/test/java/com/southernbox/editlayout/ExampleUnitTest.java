@@ -1,4 +1,4 @@
-package com.southernbox.editdeletelayout;
+package com.southernbox.editlayout;
 
 import org.junit.Test;
 

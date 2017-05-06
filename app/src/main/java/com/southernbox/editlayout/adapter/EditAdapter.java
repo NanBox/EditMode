@@ -1,4 +1,4 @@
-package com.southernbox.editdeletelayout.adapter;
+package com.southernbox.editlayout.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.southernbox.editdeletelayout.R;
-import com.southernbox.editdeletelayout.widget.EditDeleteLayout;
+import com.southernbox.editlayout.R;
+import com.southernbox.editlayout.widget.EditLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +19,16 @@ import java.util.List;
  * 主页面适配器
  */
 
-public class EditDeleteAdapter extends RecyclerView.Adapter {
+public class EditAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<String> mList;
 
     public static boolean isEdit;  //是否处于编辑状态
-    private List<EditDeleteLayout> allItems = new ArrayList<>();
-    private EditDeleteLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
+    private List<EditLayout> allItems = new ArrayList<>();
+    private EditLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
 
-    public EditDeleteAdapter(Context context, List<String> List) {
+    public EditAdapter(Context context, List<String> List) {
         this.mContext = context;
         this.mList = List;
     }
@@ -42,7 +42,7 @@ public class EditDeleteAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
-        final EditDeleteLayout layout = viewHolder.editDeleteLayout;
+        final EditLayout layout = viewHolder.editLayout;
 
         viewHolder.tvName.setText(mList.get(position));
 
@@ -79,31 +79,31 @@ public class EditDeleteAdapter extends RecyclerView.Adapter {
             }
         });
 
-        layout.setOnDragStateChangeListener(new EditDeleteLayout.OnStateChangeListener() {
+        layout.setOnDragStateChangeListener(new EditLayout.OnStateChangeListener() {
 
             @Override
-            public void onPreExecuted(EditDeleteLayout layout) {
+            public void onPreExecuted(EditLayout layout) {
                 if (!allItems.contains(layout)) {
                     allItems.add(layout);
                 }
             }
 
             @Override
-            public void onClose(EditDeleteLayout layout) {
+            public void onClose(EditLayout layout) {
                 if (mRightOpenItem == layout) {
                     mRightOpenItem = null;
                 }
             }
 
             @Override
-            public void onLeftOpen(EditDeleteLayout layout) {
+            public void onLeftOpen(EditLayout layout) {
                 if (mRightOpenItem == layout) {
                     mRightOpenItem = null;
                 }
             }
 
             @Override
-            public void onRightOpen(EditDeleteLayout layout) {
+            public void onRightOpen(EditLayout layout) {
                 if (mRightOpenItem != layout) {
                     mRightOpenItem = layout;
                 }
@@ -123,14 +123,14 @@ public class EditDeleteAdapter extends RecyclerView.Adapter {
      * @param isEdit 是否为编辑状态
      */
     public void setEdit(boolean isEdit) {
-        EditDeleteAdapter.isEdit = isEdit;
+        EditAdapter.isEdit = isEdit;
     }
 
     /**
      * 关闭所有 item
      */
     public void closeAll() {
-        for (EditDeleteLayout layout : allItems) {
+        for (EditLayout layout : allItems) {
             layout.close();
         }
     }
@@ -139,7 +139,7 @@ public class EditDeleteAdapter extends RecyclerView.Adapter {
      * 将所有 item 向左展开
      */
     public void openLeftAll() {
-        for (EditDeleteLayout layout : allItems) {
+        for (EditLayout layout : allItems) {
             layout.openLeft();
         }
     }
@@ -149,19 +149,19 @@ public class EditDeleteAdapter extends RecyclerView.Adapter {
      *
      * @return 向右展开的 item
      */
-    public EditDeleteLayout getRightOpenItem() {
+    public EditLayout getRightOpenItem() {
         return mRightOpenItem;
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
-        EditDeleteLayout editDeleteLayout;
+        EditLayout editLayout;
         TextView tvName;
         View vPreDelete;
         View vDelete;
 
         ViewHolder(View itemView) {
             super(itemView);
-            editDeleteLayout = (EditDeleteLayout) itemView.findViewById(R.id.edit_delete_layout);
+            editLayout = (EditLayout) itemView.findViewById(R.id.edit_layout);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             vPreDelete = itemView.findViewById(R.id.fl_pre_delete);
             vDelete = itemView.findViewById(R.id.fl_delete);

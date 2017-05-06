@@ -1,4 +1,4 @@
-package com.southernbox.editdeletelayout.widget;
+package com.southernbox.editlayout.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -6,26 +6,26 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.southernbox.editdeletelayout.adapter.EditDeleteAdapter;
+import com.southernbox.editlayout.adapter.EditAdapter;
 
 /**
  * Created by SouthernBox on 2017/5/2 0002.
  * 自定义列表控件，判断是否可滑动
  */
 
-public class EditDeleteRecyclerView extends RecyclerView {
+public class EditRecyclerView extends RecyclerView {
 
-    private EditDeleteLayout rightOpenItem;
+    private EditLayout rightOpenItem;
 
-    public EditDeleteRecyclerView(Context context) {
+    public EditRecyclerView(Context context) {
         super(context);
     }
 
-    public EditDeleteRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public EditRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public EditDeleteRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public EditRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -33,10 +33,10 @@ public class EditDeleteRecyclerView extends RecyclerView {
     public boolean onTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (getAdapter() instanceof EditDeleteAdapter) {
-                    rightOpenItem = ((EditDeleteAdapter) getAdapter()).getRightOpenItem();
+                if (getAdapter() instanceof EditAdapter) {
+                    rightOpenItem = ((EditAdapter) getAdapter()).getRightOpenItem();
                 }
-                if (EditDeleteAdapter.isEdit && rightOpenItem != null) {
+                if (EditAdapter.isEdit && rightOpenItem != null) {
                     rightOpenItem.openLeft();
                 }
         }

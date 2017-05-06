@@ -1,4 +1,4 @@
-package com.southernbox.editdeletelayout.widget;
+package com.southernbox.editlayout.widget;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
@@ -7,14 +7,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.southernbox.editdeletelayout.adapter.EditDeleteAdapter;
+import com.southernbox.editlayout.adapter.EditAdapter;
 
 /**
  * Created by SouthernBox on 2016/10/27 0027.
  * 侧滑删除控件
  */
 
-public class EditDeleteLayout extends FrameLayout {
+public class EditLayout extends FrameLayout {
 
     private ViewDragHelper mDragHelper;
     private View mContentView;
@@ -25,15 +25,15 @@ public class EditDeleteLayout extends FrameLayout {
     private int mLeftWidth;
     private int mRightWidth;
 
-    public EditDeleteLayout(Context context) {
+    public EditLayout(Context context) {
         this(context, null);
     }
 
-    public EditDeleteLayout(Context context, AttributeSet attrs) {
+    public EditLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public EditDeleteLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public EditLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -86,13 +86,13 @@ public class EditDeleteLayout extends FrameLayout {
 
     public interface OnStateChangeListener {
 
-        void onPreExecuted(EditDeleteLayout layout);
+        void onPreExecuted(EditLayout layout);
 
-        void onLeftOpen(EditDeleteLayout layout);
+        void onLeftOpen(EditLayout layout);
 
-        void onRightOpen(EditDeleteLayout layout);
+        void onRightOpen(EditLayout layout);
 
-        void onClose(EditDeleteLayout layout);
+        void onClose(EditLayout layout);
 
     }
 
@@ -135,7 +135,7 @@ public class EditDeleteLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         //判断是否为编辑模式,摆放每个子View的位置
-        if (EditDeleteAdapter.isEdit) {
+        if (EditAdapter.isEdit) {
             mContentView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
             mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);

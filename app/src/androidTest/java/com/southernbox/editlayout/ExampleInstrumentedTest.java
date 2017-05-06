@@ -1,4 +1,4 @@
-package com.southernbox.editdeletelayout;
+package com.southernbox.editlayout;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.southernbox.editdeletelayout", appContext.getPackageName());
+        assertEquals("com.southernbox.editlayout", appContext.getPackageName());
     }
 }
