@@ -1,7 +1,6 @@
 package com.southernbox.editdeletelayout.widget;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -16,10 +15,6 @@ import com.southernbox.editdeletelayout.adapter.EditDeleteAdapter;
  */
 
 public class EditDeleteLayout extends FrameLayout {
-
-    public final static int STATE_CLOSE = 1;      //关闭状态
-    public final static int STATE_OPEN_LEFT = 2;  //左边打开
-    public final static int STATE_OPEN_RIGHT = 3; //右边打开
 
     private ViewDragHelper mDragHelper;
     private View mContentView;
@@ -109,79 +104,27 @@ public class EditDeleteLayout extends FrameLayout {
     }
 
     public void openRight() {
-        openRight(true);
-    }
-
-    public void openRight(boolean isSmooth) {
         if (mOnStateChangeListener != null) {
             mOnStateChangeListener.onRightOpen(this);
         }
-        if (isSmooth) {
-            mDragHelper.smoothSlideViewTo(mContentView, -mRightWidth, 0);
-            invalidate();
-        } else {
-            layoutContent(STATE_OPEN_RIGHT);
-        }
+        mDragHelper.smoothSlideViewTo(mContentView, -mRightWidth, 0);
+        invalidate();
     }
 
     public void openLeft() {
-        openLeft(true);
-    }
-
-    public void openLeft(boolean isSmooth) {
         if (mOnStateChangeListener != null) {
             mOnStateChangeListener.onLeftOpen(this);
         }
-        if (isSmooth) {
-            mDragHelper.smoothSlideViewTo(mContentView, mLeftWidth, 0);
-            invalidate();
-        } else {
-            layoutContent(STATE_OPEN_LEFT);
-        }
+        mDragHelper.smoothSlideViewTo(mContentView, mLeftWidth, 0);
+        invalidate();
     }
 
     public void close() {
-        close(true);
-    }
-
-    public void close(boolean isSmooth) {
         if (mOnStateChangeListener != null) {
             mOnStateChangeListener.onClose(this);
         }
-        if (isSmooth) {
-            mDragHelper.smoothSlideViewTo(mContentView, 0, 0);
-            invalidate();
-        } else {
-            layoutContent(STATE_CLOSE);
-        }
-    }
-
-    private void layoutContent(int state) {
-        Rect frontRect = computeFrontRect(state);
-        Rect backRect = computeBackRectFromFront(frontRect);
-        Rect leftRect = computeLeftRectFromFront(frontRect);
-        mContentView.layout(frontRect.left, frontRect.top, frontRect.right, frontRect.bottom);
-        mRightView.layout(backRect.left, backRect.top, backRect.right, backRect.bottom);
-        mLeftView.layout(leftRect.left, leftRect.top, leftRect.right, leftRect.bottom);
-    }
-
-    private Rect computeBackRectFromFront(Rect frontRect) {
-        return new Rect(frontRect.right, frontRect.top, frontRect.right + mRightWidth,
-                frontRect.bottom);
-    }
-
-    private Rect computeLeftRectFromFront(Rect frontRect) {
-        return new Rect(frontRect.left - mLeftWidth, frontRect.top, frontRect.left, frontRect.bottom);
-    }
-
-    private Rect computeFrontRect(int state) {
-        int left = 0;
-        if (state == STATE_OPEN_LEFT) {
-            left = mLeftWidth;
-        } else if (state == STATE_OPEN_RIGHT) {
-            left = -mRightWidth;
-        }
-        return new Rect(left, 0, left + mWidth, mHeight);
+        mDragHelper.smoothSlideViewTo(mContentView, 0, 0);
+        invalidate();
     }
 
     private void init() {

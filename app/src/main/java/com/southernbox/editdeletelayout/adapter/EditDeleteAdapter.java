@@ -3,6 +3,7 @@ package com.southernbox.editdeletelayout.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,14 +46,23 @@ public class EditDeleteAdapter extends RecyclerView.Adapter {
 
         viewHolder.tvName.setText(mList.get(position));
 
+        viewHolder.vPreDelete.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (mRightOpenItem != null) {
+                            mRightOpenItem.openLeft();
+                        }
+                }
+                return false;
+            }
+        });
+
         viewHolder.vPreDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRightOpenItem != null) {
-                    mRightOpenItem.openLeft();
-                } else {
-                    layout.openRight();
-                }
+                layout.openRight();
             }
         });
 
