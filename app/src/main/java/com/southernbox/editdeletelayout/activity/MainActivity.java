@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.southernbox.editdeletelayout.R;
-import com.southernbox.editdeletelayout.adapter.MainAdapter;
+import com.southernbox.editdeletelayout.adapter.EditDeleteAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MainAdapter mAdapter;
+    private EditDeleteAdapter mAdapter;
     private TextView tvEdit;
     private boolean isEdit;
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         String[] names = getResources().getStringArray(R.array.query_suggestions);
         List<String> mList = new ArrayList<>();
         Collections.addAll(mList, names);
-        mAdapter = new MainAdapter(this, mList);
+        mAdapter = new EditDeleteAdapter(this, mList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }

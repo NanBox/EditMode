@@ -18,16 +18,16 @@ import java.util.List;
  * 主页面适配器
  */
 
-public class MainAdapter extends RecyclerView.Adapter {
+public class EditDeleteAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<String> mList;
-    public static boolean isEdit;
 
-    private static ArrayList<EditDeleteLayout> allItems = new ArrayList<>();
+    public static boolean isEdit;  //是否处于编辑状态
+    private List<EditDeleteLayout> allItems = new ArrayList<>();
     private EditDeleteLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
 
-    public MainAdapter(Context context, List<String> List) {
+    public EditDeleteAdapter(Context context, List<String> List) {
         this.mContext = context;
         this.mList = List;
     }
@@ -113,7 +113,7 @@ public class MainAdapter extends RecyclerView.Adapter {
      * @param isEdit 是否为编辑状态
      */
     public void setEdit(boolean isEdit) {
-        MainAdapter.isEdit = isEdit;
+        EditDeleteAdapter.isEdit = isEdit;
     }
 
     /**

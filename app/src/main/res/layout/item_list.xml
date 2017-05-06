@@ -9,19 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.AppCompatTextView
+        <android.support.v7.widget.AppCompatImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:layout_marginEnd="11dp"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="11dp"
             android:layout_marginStart="13dp"
-            android:background="@drawable/btn_red_circle"
-            android:gravity="center"
-            android:text="@string/line"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:src="@drawable/delete" />
     </FrameLayout>
 
     <android.support.v7.widget.AppCompatTextView

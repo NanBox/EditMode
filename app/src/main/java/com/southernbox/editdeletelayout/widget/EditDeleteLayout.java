@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.southernbox.editdeletelayout.adapter.MainAdapter;
+import com.southernbox.editdeletelayout.adapter.EditDeleteAdapter;
 
 /**
  * Created by SouthernBox on 2016/10/27 0027.
@@ -192,7 +192,7 @@ public class EditDeleteLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         //判断是否为编辑模式,摆放每个子View的位置
-        if (MainAdapter.isEdit) {
+        if (EditDeleteAdapter.isEdit) {
             mContentView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
             mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);

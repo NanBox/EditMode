@@ -6,31 +6,35 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.southernbox.editdeletelayout.adapter.MainAdapter;
+import com.southernbox.editdeletelayout.adapter.EditDeleteAdapter;
 
 /**
  * Created by SouthernBox on 2017/5/2 0002.
  * 自定义列表控件，判断是否可滑动
  */
 
-public class MyRecyclerView extends RecyclerView {
+public class EditDeleteRecyclerView extends RecyclerView {
 
-    public MyRecyclerView(Context context) {
+    private EditDeleteLayout rightOpenItem;
+
+    public EditDeleteRecyclerView(Context context) {
         super(context);
     }
 
-    public MyRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public EditDeleteRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public EditDeleteRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        EditDeleteLayout rightOpenItem = ((MainAdapter) getAdapter()).getRightOpenItem();
-        if (MainAdapter.isEdit && rightOpenItem != null) {
+        if (getAdapter() instanceof EditDeleteAdapter) {
+            rightOpenItem = ((EditDeleteAdapter) getAdapter()).getRightOpenItem();
+        }
+        if (EditDeleteAdapter.isEdit && rightOpenItem != null) {
             rightOpenItem.openLeft();
             return false;
         }
