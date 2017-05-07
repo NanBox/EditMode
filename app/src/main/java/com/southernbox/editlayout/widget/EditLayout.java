@@ -7,8 +7,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.southernbox.editlayout.adapter.EditAdapter;
-
 /**
  * Created by SouthernBox on 2016/10/27 0027.
  * 侧滑删除控件
@@ -16,7 +14,6 @@ import com.southernbox.editlayout.adapter.EditAdapter;
 
 public class EditLayout extends FrameLayout {
 
-    private ViewDragHelper mDragHelper;
     private View mContentView;  //内容部分
     private View mLeftView;     //左边圆形删除按键
     private View mRightView;    //右边删除按键
@@ -24,6 +21,8 @@ public class EditLayout extends FrameLayout {
     private int mHeight;        //内容部分高度
     private int mLeftWidth;     //左边部分宽度
     private int mRightWidth;    //右边部分宽度
+    private ViewDragHelper mDragHelper;
+    private boolean isEdit;     //是否为编辑状态
 
     public EditLayout(Context context) {
         this(context, null);
@@ -123,7 +122,7 @@ public class EditLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         //判断是否为编辑模式,摆放每个子View的位置
-        if (EditAdapter.isEdit) {
+        if (isEdit) {
             mContentView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
             mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);
@@ -136,10 +135,20 @@ public class EditLayout extends FrameLayout {
 
     @Override
     public void computeScroll() {
+        invalidate();
         super.computeScroll();
         if (mDragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
+    }
+
+    /**
+     * 设置编辑状态
+     *
+     * @param isEdit 是否为编辑状态
+     */
+    public void setEdit(boolean isEdit) {
+        this.isEdit = isEdit;
     }
 
     /**

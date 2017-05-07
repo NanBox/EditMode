@@ -24,7 +24,7 @@ public class EditAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private List<String> mList;
 
-    public static boolean isEdit;  //是否处于编辑状态
+    private boolean isEdit;  //是否处于编辑状态
     private List<EditLayout> allItems = new ArrayList<>();
     private EditLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
 
@@ -42,11 +42,13 @@ public class EditAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
-        final EditLayout layout = viewHolder.editLayout;
+        final EditLayout editLayout = viewHolder.editLayout;
 
-        if (!allItems.contains(layout)) {
-            allItems.add(layout);
+        if (!allItems.contains(editLayout)) {
+            allItems.add(editLayout);
         }
+
+        editLayout.setEdit(isEdit);
 
         viewHolder.tvName.setText(mList.get(position));
 
@@ -55,7 +57,7 @@ public class EditAdapter extends RecyclerView.Adapter {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (mRightOpenItem != null) {
+                        if (isEdit && mRightOpenItem != null) {
                             mRightOpenItem.openLeft();
                         }
                 }
@@ -66,7 +68,9 @@ public class EditAdapter extends RecyclerView.Adapter {
         viewHolder.vPreDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layout.openRight();
+                if (isEdit) {
+                    editLayout.openRight();
+                }
             }
         });
 
@@ -83,7 +87,7 @@ public class EditAdapter extends RecyclerView.Adapter {
             }
         });
 
-        layout.setOnDragStateChangeListener(new EditLayout.OnStateChangeListener() {
+        editLayout.setOnDragStateChangeListener(new EditLayout.OnStateChangeListener() {
 
             @Override
             public void onLeftOpen(EditLayout layout) {
@@ -120,15 +124,18 @@ public class EditAdapter extends RecyclerView.Adapter {
      * @param isEdit 是否为编辑状态
      */
     public void setEdit(boolean isEdit) {
-        EditAdapter.isEdit = isEdit;
+        this.isEdit = isEdit;
+        for (EditLayout editLayout : allItems) {
+            editLayout.setEdit(isEdit);
+        }
     }
 
     /**
      * 关闭所有 item
      */
     public void closeAll() {
-        for (EditLayout layout : allItems) {
-            layout.close();
+        for (EditLayout editLayout : allItems) {
+            editLayout.close();
         }
     }
 
@@ -136,9 +143,18 @@ public class EditAdapter extends RecyclerView.Adapter {
      * 将所有 item 向左展开
      */
     public void openLeftAll() {
-        for (EditLayout layout : allItems) {
-            layout.openLeft();
+        for (EditLayout editLayout : allItems) {
+            editLayout.openLeft();
         }
+    }
+
+    /**
+     * 获取编辑状态
+     *
+     * @return 是否为编辑状态
+     */
+    public boolean isEdit() {
+        return isEdit;
     }
 
     /**

@@ -15,7 +15,8 @@ import com.southernbox.editlayout.adapter.EditAdapter;
 
 public class EditRecyclerView extends RecyclerView {
 
-    private EditLayout rightOpenItem;
+    private boolean isEdit;             //是否为编辑状态
+    private EditLayout rightOpenItem;   //向右展开项
 
     public EditRecyclerView(Context context) {
         super(context);
@@ -34,9 +35,11 @@ public class EditRecyclerView extends RecyclerView {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (getAdapter() instanceof EditAdapter) {
-                    rightOpenItem = ((EditAdapter) getAdapter()).getRightOpenItem();
+                    EditAdapter adapter = (EditAdapter) getAdapter();
+                    rightOpenItem = adapter.getRightOpenItem();
+                    isEdit = adapter.isEdit();
                 }
-                if (EditAdapter.isEdit && rightOpenItem != null) {
+                if (isEdit && rightOpenItem != null) {
                     rightOpenItem.openLeft();
                 }
         }
