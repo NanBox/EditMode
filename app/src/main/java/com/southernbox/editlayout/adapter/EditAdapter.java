@@ -87,6 +87,14 @@ public class EditAdapter extends RecyclerView.Adapter {
             }
         });
 
+        viewHolder.vSort.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                mOnItemSortListener.onStartDrags(viewHolder);
+                return true;
+            }
+        });
+
         editLayout.setOnDragStateChangeListener(new EditLayout.OnStateChangeListener() {
 
             @Override
@@ -125,15 +133,27 @@ public class EditAdapter extends RecyclerView.Adapter {
      */
     public void setEdit(boolean isEdit) {
         this.isEdit = isEdit;
+        if (isEdit) {
+            openLeftAll();
+        } else {
+            closeAll();
+        }
         for (EditLayout editLayout : allItems) {
             editLayout.setEdit(isEdit);
         }
     }
 
+    private EditLayout.OnItemSortListener mOnItemSortListener;
+
+    public void setOnItemSortListener(EditLayout.OnItemSortListener onItemSortListener){
+        mOnItemSortListener = onItemSortListener;
+    }
+
+
     /**
      * 关闭所有 item
      */
-    public void closeAll() {
+    private void closeAll() {
         for (EditLayout editLayout : allItems) {
             editLayout.close();
         }
@@ -142,7 +162,7 @@ public class EditAdapter extends RecyclerView.Adapter {
     /**
      * 将所有 item 向左展开
      */
-    public void openLeftAll() {
+    private void openLeftAll() {
         for (EditLayout editLayout : allItems) {
             editLayout.openLeft();
         }
@@ -171,6 +191,7 @@ public class EditAdapter extends RecyclerView.Adapter {
         TextView tvName;
         View vPreDelete;
         View vDelete;
+        View vSort;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -178,6 +199,7 @@ public class EditAdapter extends RecyclerView.Adapter {
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             vPreDelete = itemView.findViewById(R.id.fl_pre_delete);
             vDelete = itemView.findViewById(R.id.fl_delete);
+            vSort = itemView.findViewById(R.id.fl_sort);
         }
     }
 }

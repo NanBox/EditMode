@@ -3,7 +3,9 @@ package com.southernbox.editlayout.widget;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -24,6 +26,9 @@ public class EditLayout extends FrameLayout {
     private ViewDragHelper mDragHelper;
     private boolean isEdit;     //是否为编辑状态
 
+    private View mSortView;
+    private int mSortWidth;
+
     public EditLayout(Context context) {
         this(context, null);
     }
@@ -43,42 +48,22 @@ public class EditLayout extends FrameLayout {
             }
 
             @Override
-            public int clampViewPositionHorizontal(View child, int left, int dx) {
-                if (child == mContentView) {
-                    if (left < -mRightWidth) {
-                        left = -mRightWidth;
-                    } else if (left > mLeftWidth) {
-                        left = mLeftWidth;
-                    }
-                } else if (child == mRightView) {
-                    if (left < mWidth - mRightWidth) {
-                        left = mWidth - mRightWidth;
-                    } else if (left > mWidth) {
-                        left = mWidth;
-                    }
-                } else if (child == mLeftView) {
-                    if (left < mWidth - mRightWidth) {
-                        left = mWidth - mRightWidth;
-                    } else if (left > -mLeftWidth) {
-                        left = 0 - mLeftWidth;
-                    }
-                }
-                return left;
-            }
-
-            @Override
             public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
                 if (changedView == mContentView) {
-                    mRightView.offsetLeftAndRight(dx);
                     mLeftView.offsetLeftAndRight(dx);
-                } else if (changedView == mRightView) {
-                    mContentView.offsetLeftAndRight(dx);
-                    mLeftView.offsetLeftAndRight(dx);
-                } else if (changedView == mLeftView) {
-                    mContentView.offsetLeftAndRight(dx);
                     mRightView.offsetLeftAndRight(dx);
+                    mSortView.offsetLeftAndRight(dx);
                 }
                 invalidate();
+                //左侧展开时，修改 mContentView 宽度
+                if (left == mLeftWidth) {
+                    mContentView.layout(mLeftWidth, 0, mWidth, mHeight);
+                    mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
+                    mLeftView.layout(0, 0, mLeftWidth, mHeight);
+                    mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
+                    mSortView.setVisibility(VISIBLE);
+                }
+
             }
         };
 
@@ -101,12 +86,32 @@ public class EditLayout extends FrameLayout {
         mOnStateChangeListener = onStateChangeListener;
     }
 
+    public interface OnItemSortListener {
+        void onStartDrags(RecyclerView.ViewHolder viewHolder);
+        void onItemMove(int fromPosition, int toPosition);
+    }
+
+    private OnItemSortListener mOnItemSortistener;
+
+    public void setOnItemSortistener(OnItemSortListener onItemSortistener){
+        mOnItemSortistener = onItemSortistener;
+    }
+
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         mLeftView = getChildAt(0);
         mContentView = getChildAt(1);
         mRightView = getChildAt(2);
+        mSortView = getChildAt(3);
+
+        mSortView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return false;
+            }
+        });
     }
 
     @Override
@@ -116,6 +121,7 @@ public class EditLayout extends FrameLayout {
         mHeight = h;
         mRightWidth = mRightView.getMeasuredWidth();
         mLeftWidth = mLeftView.getMeasuredWidth();
+        mSortWidth = mSortView.getMeasuredWidth();
     }
 
     @Override
@@ -123,13 +129,17 @@ public class EditLayout extends FrameLayout {
         super.onLayout(changed, left, top, right, bottom);
         //判断是否为编辑模式,摆放每个子View的位置
         if (isEdit) {
-            mContentView.layout(mLeftWidth, 0, mLeftWidth + mWidth, mHeight);
-            mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
+            mContentView.layout(mLeftWidth, 0, mWidth, mHeight);
+            mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);
+            mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
+            mSortView.setVisibility(VISIBLE);
         } else {
             mContentView.layout(0, 0, mWidth, mHeight);
             mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
             mLeftView.layout(-mLeftWidth, 0, 0, mHeight);
+            mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
+            mSortView.setVisibility(INVISIBLE);
         }
     }
 
@@ -151,6 +161,7 @@ public class EditLayout extends FrameLayout {
         this.isEdit = isEdit;
     }
 
+
     /**
      * 展开左侧
      */
@@ -158,6 +169,7 @@ public class EditLayout extends FrameLayout {
         if (mOnStateChangeListener != null) {
             mOnStateChangeListener.onLeftOpen(this);
         }
+        //滑动到左侧展开位置
         mDragHelper.smoothSlideViewTo(mContentView, mLeftWidth, 0);
         invalidate();
     }
@@ -169,7 +181,8 @@ public class EditLayout extends FrameLayout {
         if (mOnStateChangeListener != null) {
             mOnStateChangeListener.onRightOpen(this);
         }
-        mDragHelper.smoothSlideViewTo(mContentView, -mRightWidth, 0);
+        //滑动到右侧展开位置
+        mDragHelper.smoothSlideViewTo(mContentView, -(mRightWidth - mLeftWidth), 0);
         invalidate();
     }
 
@@ -180,6 +193,20 @@ public class EditLayout extends FrameLayout {
         if (mOnStateChangeListener != null) {
             mOnStateChangeListener.onClose(this);
         }
+        //将 mContentView 宽度复原
+        if (mContentView.getLeft() > 0) {
+            //左边展开复原
+            mContentView.layout(mLeftWidth, 0, mWidth + mLeftWidth, mHeight);
+            mLeftView.layout(0, 0, mLeftWidth, mHeight);
+            mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
+        } else {
+            //右边展开复原
+            mContentView.layout(-mRightWidth, 0, mWidth - mRightWidth, mHeight);
+            mLeftView.layout(-mLeftWidth - mRightWidth, 0, -mRightWidth, mHeight);
+            mRightView.layout(mWidth - mRightWidth, 0, mWidth, mHeight);
+        }
+        mSortView.setVisibility(INVISIBLE);
+        //滑动到关闭位置
         mDragHelper.smoothSlideViewTo(mContentView, 0, 0);
         invalidate();
     }
