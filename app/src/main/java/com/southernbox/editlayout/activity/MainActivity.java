@@ -25,7 +25,7 @@ import java.util.List;
  * 主页面
  */
 
-public class MainActivity extends AppCompatActivity implements EditLayout.OnItemSortListener{
+public class MainActivity extends AppCompatActivity implements EditLayout.OnItemSortListener {
 
     private EditAdapter mAdapter;
     private TextView tvEdit;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements EditLayout.OnItem
         mAdapter.notifyItemMoved(fromPosition, toPosition);
     }
 
-    public class EditItemTouchHelperCallback extends ItemTouchHelper.Callback{
+    public class EditItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         @Override
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -115,5 +115,10 @@ public class MainActivity extends AppCompatActivity implements EditLayout.OnItem
 
         }
 
+        @Override
+        public boolean isLongPressDragEnabled() {
+            //禁止长按拖拽
+            return false;
+        }
     }
 }

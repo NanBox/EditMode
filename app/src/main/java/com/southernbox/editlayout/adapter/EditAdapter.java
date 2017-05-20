@@ -59,18 +59,11 @@ public class EditAdapter extends RecyclerView.Adapter {
                     case MotionEvent.ACTION_DOWN:
                         if (isEdit && mRightOpenItem != null) {
                             mRightOpenItem.openLeft();
+                        } else {
+                            editLayout.openRight();
                         }
                 }
-                return false;
-            }
-        });
-
-        viewHolder.vPreDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isEdit) {
-                    editLayout.openRight();
-                }
+                return true;
             }
         });
 
@@ -90,8 +83,12 @@ public class EditAdapter extends RecyclerView.Adapter {
         viewHolder.vSort.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                mOnItemSortListener.onStartDrags(viewHolder);
-                return true;
+                if (isEdit && mRightOpenItem != null) {
+                    mRightOpenItem.openLeft();
+                } else {
+                    mOnItemSortListener.onStartDrags(viewHolder);
+                }
+                return false;
             }
         });
 
@@ -145,7 +142,7 @@ public class EditAdapter extends RecyclerView.Adapter {
 
     private EditLayout.OnItemSortListener mOnItemSortListener;
 
-    public void setOnItemSortListener(EditLayout.OnItemSortListener onItemSortListener){
+    public void setOnItemSortListener(EditLayout.OnItemSortListener onItemSortListener) {
         mOnItemSortListener = onItemSortListener;
     }
 

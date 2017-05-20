@@ -88,12 +88,13 @@ public class EditLayout extends FrameLayout {
 
     public interface OnItemSortListener {
         void onStartDrags(RecyclerView.ViewHolder viewHolder);
+
         void onItemMove(int fromPosition, int toPosition);
     }
 
     private OnItemSortListener mOnItemSortistener;
 
-    public void setOnItemSortistener(OnItemSortListener onItemSortistener){
+    public void setOnItemSortistener(OnItemSortListener onItemSortistener) {
         mOnItemSortistener = onItemSortistener;
     }
 
@@ -178,12 +179,15 @@ public class EditLayout extends FrameLayout {
      * 展开右侧
      */
     public void openRight() {
-        if (mOnStateChangeListener != null) {
-            mOnStateChangeListener.onRightOpen(this);
+        //左侧完全展开时，才能向右侧展开
+        if (mContentView.getLeft() == mLeftWidth) {
+            if (mOnStateChangeListener != null) {
+                mOnStateChangeListener.onRightOpen(this);
+            }
+            //滑动到右侧展开位置
+            mDragHelper.smoothSlideViewTo(mContentView, -(mRightWidth - mLeftWidth), 0);
+            invalidate();
         }
-        //滑动到右侧展开位置
-        mDragHelper.smoothSlideViewTo(mContentView, -(mRightWidth - mLeftWidth), 0);
-        invalidate();
     }
 
     /**
