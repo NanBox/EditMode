@@ -34,6 +34,7 @@ public class EditRecyclerView extends RecyclerView {
     public boolean onTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
                 if (getAdapter() instanceof EditAdapter) {
                     EditAdapter adapter = (EditAdapter) getAdapter();
                     rightOpenItem = adapter.getRightOpenItem();

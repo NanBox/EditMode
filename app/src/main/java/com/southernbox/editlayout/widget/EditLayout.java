@@ -86,16 +86,14 @@ public class EditLayout extends FrameLayout {
         mOnStateChangeListener = onStateChangeListener;
     }
 
+    /**
+     * 排序监听器
+     */
     public interface OnItemSortListener {
+
         void onStartDrags(RecyclerView.ViewHolder viewHolder);
 
         void onItemMove(int fromPosition, int toPosition);
-    }
-
-    private OnItemSortListener mOnItemSortistener;
-
-    public void setOnItemSortistener(OnItemSortListener onItemSortistener) {
-        mOnItemSortistener = onItemSortistener;
     }
 
 
