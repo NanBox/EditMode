@@ -17,17 +17,20 @@ import android.widget.FrameLayout;
 public class EditLayout extends FrameLayout {
 
     private View mContentView;  //内容部分
-    private View mLeftView;     //左边圆形删除按键
-    private View mRightView;    //右边删除按键
     private int mWidth;         //内容部分宽度
     private int mHeight;        //内容部分高度
-    private int mLeftWidth;     //左边部分宽度
-    private int mRightWidth;    //右边部分宽度
+
+    private View mLeftView;     //左边圆形删除按键
+    private int mLeftWidth;     //左边圆形删除按键宽度
+
+    private View mRightView;    //右边删除按键
+    private int mRightWidth;    //右边删除按键宽度
+
+    private View mSortView;     //排序按键
+    private int mSortWidth;     //排序按键宽度
+
     private ViewDragHelper mDragHelper;
     private boolean isEdit;     //是否为编辑状态
-
-    private View mSortView;
-    private int mSortWidth;
 
     public EditLayout(Context context) {
         this(context, null);
@@ -51,15 +54,12 @@ public class EditLayout extends FrameLayout {
             public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
                 if (changedView == mContentView) {
                     mLeftView.offsetLeftAndRight(dx);
-                    mRightView.offsetLeftAndRight(dx);
                     mSortView.offsetLeftAndRight(dx);
                 }
                 invalidate();
                 //左侧展开时，修改 mContentView 宽度
                 if (left == mLeftWidth) {
                     mContentView.layout(mLeftWidth, 0, mWidth, mHeight);
-                    mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
-                    mLeftView.layout(0, 0, mLeftWidth, mHeight);
                     mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
                     mSortView.setVisibility(VISIBLE);
                 }
@@ -70,6 +70,9 @@ public class EditLayout extends FrameLayout {
         mDragHelper = ViewDragHelper.create(this, mCallback);
     }
 
+    /**
+     * 状态改变监听器
+     */
     public interface OnStateChangeListener {
 
         void onLeftOpen(EditLayout layout);
@@ -96,21 +99,13 @@ public class EditLayout extends FrameLayout {
         void onItemMove(int fromPosition, int toPosition);
     }
 
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mLeftView = getChildAt(0);
+        mRightView = getChildAt(0);
         mContentView = getChildAt(1);
-        mRightView = getChildAt(2);
+        mLeftView = getChildAt(2);
         mSortView = getChildAt(3);
-
-        mSortView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return false;
-            }
-        });
     }
 
     @Override
@@ -127,17 +122,15 @@ public class EditLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         //判断是否为编辑模式,摆放每个子View的位置
+        mRightView.layout(mWidth - mRightWidth, 0, mWidth, mHeight);
+        mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
         if (isEdit) {
             mContentView.layout(mLeftWidth, 0, mWidth, mHeight);
-            mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);
-            mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
             mSortView.setVisibility(VISIBLE);
         } else {
             mContentView.layout(0, 0, mWidth, mHeight);
-            mRightView.layout(mWidth, 0, mRightWidth + mWidth, mHeight);
             mLeftView.layout(-mLeftWidth, 0, 0, mHeight);
-            mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
             mSortView.setVisibility(INVISIBLE);
         }
     }
@@ -159,7 +152,6 @@ public class EditLayout extends FrameLayout {
     public void setEdit(boolean isEdit) {
         this.isEdit = isEdit;
     }
-
 
     /**
      * 展开左侧
@@ -200,12 +192,10 @@ public class EditLayout extends FrameLayout {
             //左边展开复原
             mContentView.layout(mLeftWidth, 0, mWidth + mLeftWidth, mHeight);
             mLeftView.layout(0, 0, mLeftWidth, mHeight);
-            mRightView.layout(mWidth + mLeftWidth, 0, mRightWidth + mWidth + mLeftWidth, mHeight);
         } else {
             //右边展开复原
             mContentView.layout(-mRightWidth, 0, mWidth - mRightWidth, mHeight);
             mLeftView.layout(-mLeftWidth - mRightWidth, 0, -mRightWidth, mHeight);
-            mRightView.layout(mWidth - mRightWidth, 0, mWidth, mHeight);
         }
         mSortView.setVisibility(INVISIBLE);
         //滑动到关闭位置

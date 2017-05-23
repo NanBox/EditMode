@@ -2,34 +2,7 @@
 <com.southernbox.editlayout.widget.EditLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/edit_layout"
     android:layout_width="match_parent"
-    android:layout_height="55dp"
-    android:background="@color/white">
-
-    <FrameLayout
-        android:id="@+id/fl_pre_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="11dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="11dp"
-            android:layout_marginStart="13dp"
-            android:src="@drawable/delete" />
-    </FrameLayout>
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tv_name"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingStart="20dp"
-        android:textSize="20sp" />
+    android:layout_height="55dp">
 
     <FrameLayout
         android:id="@+id/fl_delete"
@@ -45,6 +18,34 @@
             android:textColor="@color/white"
             android:textSize="15sp" />
 
+    </FrameLayout>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingStart="20dp"
+        android:textSize="20sp" />
+
+    <FrameLayout
+        android:id="@+id/fl_pre_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="11dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginStart="13dp"
+            android:src="@drawable/delete" />
     </FrameLayout>
 
     <FrameLayout

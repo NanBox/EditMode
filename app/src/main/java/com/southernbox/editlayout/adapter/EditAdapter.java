@@ -51,6 +51,7 @@ public class EditAdapter extends RecyclerView.Adapter {
         editLayout.setEdit(isEdit);
 
         viewHolder.tvName.setText(mList.get(position));
+        viewHolder.tvName.setClickable(true);
 
         viewHolder.vPreDelete.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -71,11 +72,13 @@ public class EditAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 int position = viewHolder.getAdapterPosition();
-                mList.remove(position);
-                mRightOpenItem = null;
-                notifyItemRemoved(position);
-                if (position != mList.size()) {
-                    notifyItemRangeChanged(position, mList.size() - position);
+                if (position >= 0) {
+                    mList.remove(position);
+                    mRightOpenItem = null;
+                    notifyItemRemoved(position);
+                    if (position != mList.size()) {
+                        notifyItemRangeChanged(position, mList.size() - position);
+                    }
                 }
             }
         });
