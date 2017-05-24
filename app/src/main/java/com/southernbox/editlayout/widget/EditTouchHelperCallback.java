@@ -18,9 +18,9 @@ public class EditTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        // 允许上下滑动
+        // 允许上下拖拽
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        // 禁止左右滑动
+        // 禁止左右拖拽
         int swipeFlags = 0;
         return makeMovementFlags(dragFlags, swipeFlags);
     }
