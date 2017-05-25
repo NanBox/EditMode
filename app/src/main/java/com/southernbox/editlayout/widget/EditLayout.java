@@ -62,8 +62,8 @@ public class EditLayout extends FrameLayout {
                     mSortView.layout(mWidth - mSortWidth, 0, mWidth, mHeight);
                     mSortView.setVisibility(VISIBLE);
                 }
-
             }
+
         };
 
         mDragHelper = ViewDragHelper.create(this, mCallback);

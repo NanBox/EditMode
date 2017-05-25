@@ -149,7 +149,6 @@ public class EditAdapter extends RecyclerView.Adapter {
         mOnItemSortListener = onItemSortListener;
     }
 
-
     /**
      * 关闭所有 item
      */
