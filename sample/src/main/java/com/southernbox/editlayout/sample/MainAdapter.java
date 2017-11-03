@@ -33,7 +33,6 @@ public class MainAdapter extends EditAdapter<String> {
     public void onBindEditViewHolder(EditViewHolder holder, int position) {
         TextView tvName = (TextView) holder.vContent;
         tvName.setText(mList.get(position));
-        tvName.setClickable(true);
     }
 
     private static class ViewHolder extends EditViewHolder {
