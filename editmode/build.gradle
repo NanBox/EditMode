@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 26
@@ -21,4 +22,12 @@ android {
 
 dependencies {
     compile 'com.android.support:recyclerview-v7:26.1.0'
+}
+
+publish {
+    userOrg = 'southernbox'
+    groupId = 'com.southernbox'
+    artifactId = 'EditMode'
+    publishVersion = '1.0.0'
+    website = 'https://github.com/SouthernBox/EditMode'
 }
