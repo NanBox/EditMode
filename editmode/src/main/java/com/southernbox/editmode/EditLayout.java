@@ -1,4 +1,4 @@
-package com.southernbox.editlayout.widget;
+package com.southernbox.editmode;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;

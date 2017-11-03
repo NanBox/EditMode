@@ -1,4 +1,4 @@
-package com.southernbox.editlayout.widget;
+package com.southernbox.editmode;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -22,7 +22,7 @@ public class EditTouchHelperCallback extends ItemTouchHelper.Callback {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         // 禁止左右拖拽
         int swipeFlags = 0;
-        return makeMovementFlags(dragFlags, swipeFlags);
+        return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags);
     }
 
     @Override

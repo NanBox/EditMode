@@ -1,47 +1,44 @@
-package com.southernbox.editlayout.adapter;
+package com.southernbox.editmode;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.southernbox.editlayout.R;
-import com.southernbox.editlayout.widget.EditLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by SouthernBox on 2016/10/25 0025.
- * 主页面适配器
+ * 列表适配器
  */
 
-public class EditAdapter extends RecyclerView.Adapter {
+public abstract class EditAdapter<T> extends RecyclerView.Adapter {
 
-    private Context mContext;
-    private List<String> mList;
+    protected Context mContext;
+    protected List<T> mList;
 
     private boolean isEdit;  //是否处于编辑状态
     private List<EditLayout> allItems = new ArrayList<>();
     private EditLayout mRightOpenItem;  //向右展开的删除项，只会存在一项
 
-    public EditAdapter(Context context, List<String> List) {
+    public EditAdapter(Context context, List<T> List) {
         this.mContext = context;
         this.mList = List;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_list, parent, false);
-        return new ViewHolder(view);
+        return onCreateEditViewHolder(parent, viewType);
     }
+
+    public abstract EditViewHolder onCreateEditViewHolder(ViewGroup parent, int viewType);
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final ViewHolder viewHolder = (ViewHolder) holder;
+        final EditViewHolder viewHolder = (EditViewHolder) holder;
         final EditLayout editLayout = viewHolder.editLayout;
 
         if (!allItems.contains(editLayout)) {
@@ -50,11 +47,12 @@ public class EditAdapter extends RecyclerView.Adapter {
 
         editLayout.setEdit(isEdit);
 
-        viewHolder.tvName.setText(mList.get(position));
-        viewHolder.tvName.setClickable(true);
+        onBindEditViewHolder(viewHolder, position);
 
         viewHolder.vPreDelete.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
+            @SuppressLint("ClickableViewAccessibility")
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -84,7 +82,9 @@ public class EditAdapter extends RecyclerView.Adapter {
         });
 
         viewHolder.vSort.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
+            @SuppressLint("ClickableViewAccessibility")
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (isEdit && mRightOpenItem != null) {
                     mRightOpenItem.openLeft();
@@ -120,6 +120,8 @@ public class EditAdapter extends RecyclerView.Adapter {
         });
 
     }
+
+    public abstract void onBindEditViewHolder(EditViewHolder holder, int position);
 
     @Override
     public int getItemCount() {
@@ -185,20 +187,7 @@ public class EditAdapter extends RecyclerView.Adapter {
         return mRightOpenItem;
     }
 
-    private static class ViewHolder extends RecyclerView.ViewHolder {
-        EditLayout editLayout;
-        TextView tvName;
-        View vPreDelete;
-        View vDelete;
-        View vSort;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            editLayout = (EditLayout) itemView.findViewById(R.id.edit_layout);
-            tvName = (TextView) itemView.findViewById(R.id.tv_name);
-            vPreDelete = itemView.findViewById(R.id.fl_pre_delete);
-            vDelete = itemView.findViewById(R.id.fl_delete);
-            vSort = itemView.findViewById(R.id.fl_sort);
-        }
+    public List<T> getList() {
+        return mList;
     }
 }
