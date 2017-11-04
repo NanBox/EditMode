@@ -1,4 +1,5 @@
 [![](https://travis-ci.org/SouthernBox/EditMode.svg?branch=master)](https://travis-ci.org/SouthernBox/EditMode)
+ [![](https://api.bintray.com/packages/southernbox/maven/EditMode/images/download.svg)](https://bintray.com/southernbox/maven/EditMode/_latestVersion)
 [![](https://img.shields.io/badge/API-15+-green.svg?style=flat)](https://android-arsenal.com/api?level=15)
 [![](https://badge.juejin.im/entry/590e9c32a0bb9f00589648fb/likes.svg?style=flat)](https://juejin.im/post/590e9bb02f301e0057d366f1)
 [![](https://badge.juejin.im/entry/5926aa5a44d90400640577a3/likes.svg?style=flat)](https://juejin.im/post/5926a980a0bb9f0057c718e7)
